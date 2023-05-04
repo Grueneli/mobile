@@ -35,22 +35,29 @@ L.control.scale({
     imperial: false,
 }).addTo(map);
 
+map.locate ({
+    setView: true,
+    watch:true,
+    maxZoom: 16
+});
+
+let circle = L.circle([0,0],0).addTo(map);
+let marker = L.marker ([0,0]).addTo(map);
 
 //Geolocation
+map.on('locationfound', function (evt){
+    console.log(evt)
+    let radius = Math.round(evt.accuracy);
+    marker.setLatLng(evt.latlng);
+    marker.bindTooltip(`You are within ${Math.round(radius)} meters from this point`).openTooltip();
 
-map.locate({setView: true, maxZoom: 16});
-function onLocationFound(evt) {// evt= events; wenn so ein event im Spiel ist, wird das übergebeben
-    let radius = Math.round (evt.accuracy);
+//L.circle(evt.latlng, radius).addTo(map);
+    circle.setLatLng(evt.latlng);
+    circle.setRadius(radius);
+})
 
-    L.marker(evt.latlng).addTo(map)
-        .bindTooltip(`You are within ${Math.round(radius)} meters from this point`).openTooltip();
 
-    L.circle(evt.latlng, radius).addTo(map);
-}
-
-map.on('locationfound', onLocationFound);
-function onLocationError(evt) {
+map.on('locationerror', function(evt){
+    console.log (evt)
     alert(evt.message);
-   }
-
-map.on('locationerror', onLocationError);
+});
