@@ -40,10 +40,10 @@ L.control.scale({
 
 map.locate({setView: true, maxZoom: 16});
 function onLocationFound(evt) {// evt= events; wenn so ein event im Spiel ist, wird das übergebeben
-    let radius = evt.accuracy;
+    let radius = Math.round (evt.accuracy);
 
     L.marker(evt.latlng).addTo(map)
-        .bindPopup("You are within " + radius + " meters from this point").openPopup();
+        .bindTooltip(`You are within ${Math.round(radius)} meters from this point`).openTooltip();
 
     L.circle(evt.latlng, radius).addTo(map);
 }
