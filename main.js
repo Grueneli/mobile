@@ -7,6 +7,8 @@ let stephansdom = {
     title: "Stephansdom"
 };
 
+
+
 // Karte initialisieren
 let map = L.map("map").setView([
     stephansdom.lat, stephansdom.lng
@@ -33,3 +35,22 @@ L.control.scale({
     imperial: false,
 }).addTo(map);
 
+
+//Geolocation
+
+map.locate({setView: true, maxZoom: 16});
+function onLocationFound(evt) {// evt= events; wenn so ein event im Spiel ist, wird das übergebeben
+    let radius = evt.accuracy;
+
+    L.marker(evt.latlng).addTo(map)
+        .bindPopup("You are within " + radius + " meters from this point").openPopup();
+
+    L.circle(evt.latlng, radius).addTo(map);
+}
+
+map.on('locationfound', onLocationFound);
+function onLocationError(evt) {
+    alert(evt.message);
+   }
+
+map.on('locationerror', onLocationError);
